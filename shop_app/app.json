@@ -3,6 +3,9 @@
     "name": "shop_app",
     "slug": "shop_app",
     "version": "1.0.0",
+    "extra": { 
+      "eas": {
+       "projectId": "0d95b141-8f30-4519-94e0-8ca84d0ca7d6" }},  
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
