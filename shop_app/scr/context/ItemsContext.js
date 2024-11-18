@@ -47,6 +47,7 @@ export const ItemsProvider = ({ children }) => {
     setItems(newItems);
     saveItems(newItems);
   };
+  
 
   return (
     <ItemsContext.Provider value={{ items, addItem, editItem, removeItem }}>
