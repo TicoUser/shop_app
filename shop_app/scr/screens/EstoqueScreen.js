@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { ItemsContext } from '.../ItemsContext';
+import { ItemsContext } from '../context/ItemsContext';
 
 const EstoqueScreen = () => {
   const { items } = useContext(ItemsContext);

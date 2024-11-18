@@ -2,12 +2,12 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import * as React from 'react'; import { NavigationContainer } from '@react-navigation/native'; 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; 
-import { ItemsContext, ItemsProvider } from './screens/ItemsContext';
-import ReposicaoScreen from './screens/ReposicaoScreen'; 
-import EstoqueScreen from './screens/EstoqueScreen'; 
-import FluxoCaixaScreen from './screens/FluxoCaixaScreen'; 
-import ControleGeralScreen from './screens/ControleGeralScreen';
-import ProductList from './screens/ItemsContext';
+import { ItemsContext } from './scr/context/ItemsContext';
+import { ItemsProvider } from './src/context/ItemsContext';
+import ReposicaoScreen from './scr/screens/ReposicaoScreen'; 
+import EstoqueScreen from './scr/screens/EstoqueScreen'; 
+import FluxoCaixaScreen from './scr/screens/FluxoCaixaScreen'; 
+import ControleGeralScreen from './scr/screens/ControleGeralScreen';
 
 const Tab = createBottomTabNavigator(); 
 function MyTabs() { 

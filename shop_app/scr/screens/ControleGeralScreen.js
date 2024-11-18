@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { View, Text, TextInput, Button, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import { ItemsContext } from '.../ItemsContext';
+import { ItemsContext } from '../context/ItemsContext';
 
 const ControleGeralScreen = () => {
   const { items, addItem, editItem, removeItem } = useContext(ItemsContext);
