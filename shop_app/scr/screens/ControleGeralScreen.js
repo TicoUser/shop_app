@@ -1,87 +1,109 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TextInput, Button, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { RecipeContext } from '../context/RecipeContext';
 
 const ControleGeralScreen = () => {
-  const { items, addItem, editItem, removeItem } = useContext(RecipeContext);
-  const [inputValue, setInputValue] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [editingId, setEditingId] = useState(null);
-  const [newText, setNewText] = useState('');
-  const [newQuantity, setNewQuantity] = useState('');
+  const { expenses, addExpense, profits, addProfit } = useContext(RecipeContext);
+  const [expenseName, setExpenseName] = useState('');
+  const [expenseAmount, setExpenseAmount] = useState('');
+  const [profitName, setProfitName] = useState('');
+  const [profitAmount, setProfitAmount] = useState('');
+  const [isExpenseSectionVisible, setIsExpenseSectionVisible] = useState(true);
+  const [isProfitSectionVisible, setIsProfitSectionVisible] = useState(true);
 
-  const handleAddItem = () => {
-    if (inputValue.trim() && quantity.trim()) {
-      addItem({ id: Date.now().toString(), text: inputValue, quantity: parseInt(quantity, 10) });
-      setInputValue('');
-      setQuantity('');
+  const handleAddExpense = () => {
+    if (expenseName.trim() && expenseAmount.trim()) {
+      addExpense({ id: Date.now().toString(), name: expenseName, amount: parseFloat(expenseAmount) });
+      setExpenseName('');
+      setExpenseAmount('');
     }
   };
 
-  const handleEditItem = (id) => {
-    editItem(id, newText, parseInt(newQuantity, 10));
-    setEditingId(null);
-    setNewText('');
-    setNewQuantity('');
+  const handleAddProfit = () => {
+    if (profitName.trim() && profitAmount.trim()) {
+      addProfit({ id: Date.now().toString(), name: profitName, amount: parseFloat(profitAmount) });
+      setProfitName('');
+      setProfitAmount('');
+    }
   };
 
-  const renderItem = ({ item }) => {
-    const isEditing = editingId === item.id;
+  const renderExpenseItem = ({ item }) => (
+    <View style={styles.itemContainer}>
+      <Text style={styles.itemText}>{`${item.name} - R$ ${item.amount.toFixed(2)}`}</Text>
+    </View>
+  );
 
-    return (
-      <View style={styles.itemContainer}>
-        {isEditing ? (
-          <>
-            <TextInput
-              style={styles.input}
-              value={newText}
-              onChangeText={setNewText}
-              onBlur={() => handleEditItem(item.id)}
-            />
-            <TextInput
-              style={styles.input}
-              value={newQuantity}
-              onChangeText={setNewQuantity}
-              onBlur={() => handleEditItem(item.id)}
-              keyboardType="numeric"
-              placeholder="Quantidade"
-            />
-          </>
-        ) : (
-          <>
-            <TouchableOpacity onPress={() => { setEditingId(item.id); setNewText(item.text); setNewQuantity(item.quantity.toString()); }}>
-              <Text style={styles.itemText}>{`${item.text} - Quantidade: ${item.quantity}`}</Text>
-            </TouchableOpacity>
-            <Button title="Editar" onPress={() => { setEditingId(item.id); setNewText(item.text); setNewQuantity(item.quantity.toString()); }} />
-            <Button title="Remover" onPress={() => removeItem(item.id)} />
-          </>
-        )}
-      </View>
-    );
-  };
+  const renderProfitItem = ({ item }) => (
+    <View style={styles.itemContainer}>
+      <Text style={styles.itemText}>{`${item.name} - R$ ${item.amount.toFixed(2)}`}</Text>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Controle Geral</Text>
-      <TextInput
-        style={styles.input}
-        value={inputValue}
-        onChangeText={setInputValue}
-        placeholder="Adicionar novo item"
-      />
-      <TextInput
-        style={styles.input}
-        value={quantity}
-        onChangeText={setQuantity}
-        placeholder="Quantidade"
-        keyboardType="numeric"
-      />
-      <Button title="Adicionar" onPress={handleAddItem} />
-      <FlatList
-        data={items}
-        keyExtractor={item => item.id}
-        renderItem={renderItem}
-      />
+      
+      <View style={styles.section}>
+        <TouchableOpacity onPress={() => setIsExpenseSectionVisible(!isExpenseSectionVisible)}>
+          <Text style={styles.sectionTitle}>
+            {isExpenseSectionVisible ? '▼' : '▶'} Controle de Gastos
+          </Text>
+        </TouchableOpacity>
+        {isExpenseSectionVisible && (
+          <>
+            <TextInput
+              style={styles.input}
+              value={expenseName}
+              onChangeText={setExpenseName}
+              placeholder="Nome do Gasto"
+            />
+            <TextInput
+              style={styles.input}
+              value={expenseAmount}
+              onChangeText={setExpenseAmount}
+              placeholder="Valor do Gasto"
+              keyboardType="numeric"
+            />
+            <Button title="Adicionar Gasto" onPress={handleAddExpense} />
+            <FlatList
+              data={expenses}
+              keyExtractor={item => item.id}
+              renderItem={renderExpenseItem}
+            />
+          </>
+        )}
+      </View>
+      
+      <View style={styles.section}>
+        <TouchableOpacity onPress={() => setIsProfitSectionVisible(!isProfitSectionVisible)}>
+          <Text style={styles.sectionTitle}>
+            {isProfitSectionVisible ? '▼' : '▶'} Controle de Lucros
+          </Text>
+        </TouchableOpacity>
+        {isProfitSectionVisible && (
+          <>
+            <TextInput
+              style={styles.input}
+              value={profitName}
+              onChangeText={setProfitName}
+              placeholder="Nome do Lucro"
+            />
+            <TextInput
+              style={styles.input}
+              value={profitAmount}
+              onChangeText={setProfitAmount}
+              placeholder="Valor do Lucro"
+              keyboardType="numeric"
+            />
+            <Button title="Adicionar Lucro" onPress={handleAddProfit} />
+            <FlatList
+              data={profits}
+              keyExtractor={item => item.id}
+              renderItem={renderProfitItem}
+            />
+          </>
+        )}
+      </View>
     </View>
   );
 };
@@ -96,6 +118,16 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    textAlign: 'center',
+  },
+  section: {
+    marginBottom: 30,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
   },
   input: {
     height: 40,
@@ -103,14 +135,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     padding: 10,
+    borderRadius: 5,
   },
   itemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 10,
+    padding: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: '#ccc',
   },
   itemText: {
     fontSize: 18,

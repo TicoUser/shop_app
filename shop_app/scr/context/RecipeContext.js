@@ -6,6 +6,8 @@ export const RecipeContext = createContext();
 export const RecipeProvider = ({ children }) => {
   const [items, setItems] = useState([]);
   const [recipes, setRecipes] = useState([]);
+  const [expenses, setExpenses] = useState([]); 
+  const [profits, setProfits] = useState([]);
 
   useEffect(() => {
     loadItems();
@@ -74,6 +76,14 @@ export const RecipeProvider = ({ children }) => {
       });
       setItems([...items]); // Atualizar o estado dos itens
     }
+  };
+
+  const addExpense = (expense) => {   
+    setExpenses([...expenses, expense]); 
+  }; 
+  
+  const addProfit = (profit) => { 
+    setProfits([...profits, profit]); 
   };
 
   return (
