@@ -1,13 +1,14 @@
 import React, { useContext } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { ItemsContext } from '../context/ItemsContext';
+import { RecipeContext } from '../context/RecipeContext';
 
 const EstoqueScreen = () => {
-  const { items } = useContext(ItemsContext);
+  const { items } = useContext(RecipeContext);
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       <Text style={styles.itemText}>{item.text}</Text>
+      <Text style={styles.quantityText}>{`Quantidade: ${item.quantity || 0}`}</Text>
     </View>
   );
 
@@ -41,6 +42,10 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 18,
+  },
+  quantityText: {
+    fontSize: 16,
+    color: '#888',
   },
 });
 

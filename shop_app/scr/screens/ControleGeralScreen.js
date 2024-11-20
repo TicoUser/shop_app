@@ -1,24 +1,64 @@
 import React, { useContext, useState } from 'react';
 import { View, Text, TextInput, Button, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import { ItemsContext } from '../context/ItemsContext';
+import { RecipeContext } from '../context/RecipeContext';
 
 const ControleGeralScreen = () => {
-  const { items, addItem, editItem, removeItem } = useContext(ItemsContext);
+  const { items, addItem, editItem, removeItem } = useContext(RecipeContext);
   const [inputValue, setInputValue] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const [editingId, setEditingId] = useState(null);
+  const [newText, setNewText] = useState('');
+  const [newQuantity, setNewQuantity] = useState('');
 
   const handleAddItem = () => {
-    if (inputValue.trim()) {
-      addItem({ id: Date.now().toString(), text: inputValue });
+    if (inputValue.trim() && quantity.trim()) {
+      addItem({ id: Date.now().toString(), text: inputValue, quantity: parseInt(quantity, 10) });
       setInputValue('');
+      setQuantity('');
     }
   };
 
-  const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
-      <Text style={styles.itemText}>{item.text}</Text>
-      <Button title="X" onPress={() => removeItem(item.id)} />
-    </View>
-  );
+  const handleEditItem = (id) => {
+    editItem(id, newText, parseInt(newQuantity, 10));
+    setEditingId(null);
+    setNewText('');
+    setNewQuantity('');
+  };
+
+  const renderItem = ({ item }) => {
+    const isEditing = editingId === item.id;
+
+    return (
+      <View style={styles.itemContainer}>
+        {isEditing ? (
+          <>
+            <TextInput
+              style={styles.input}
+              value={newText}
+              onChangeText={setNewText}
+              onBlur={() => handleEditItem(item.id)}
+            />
+            <TextInput
+              style={styles.input}
+              value={newQuantity}
+              onChangeText={setNewQuantity}
+              onBlur={() => handleEditItem(item.id)}
+              keyboardType="numeric"
+              placeholder="Quantidade"
+            />
+          </>
+        ) : (
+          <>
+            <TouchableOpacity onPress={() => { setEditingId(item.id); setNewText(item.text); setNewQuantity(item.quantity.toString()); }}>
+              <Text style={styles.itemText}>{`${item.text} - Quantidade: ${item.quantity}`}</Text>
+            </TouchableOpacity>
+            <Button title="Editar" onPress={() => { setEditingId(item.id); setNewText(item.text); setNewQuantity(item.quantity.toString()); }} />
+            <Button title="Remover" onPress={() => removeItem(item.id)} />
+          </>
+        )}
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -28,6 +68,13 @@ const ControleGeralScreen = () => {
         value={inputValue}
         onChangeText={setInputValue}
         placeholder="Adicionar novo item"
+      />
+      <TextInput
+        style={styles.input}
+        value={quantity}
+        onChangeText={setQuantity}
+        placeholder="Quantidade"
+        keyboardType="numeric"
       />
       <Button title="Adicionar" onPress={handleAddItem} />
       <FlatList

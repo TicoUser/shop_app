@@ -1,25 +1,51 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useContext } from 'react';
+import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
+import { RecipeContext } from '../context/RecipeContext';
 
-function FluxoCaixaScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Fluxo de caixa</Text>
+const FluxoCaixaScreen = () => {
+  const { recipes, registerSale } = useContext(RecipeContext);
+
+  const handleRegisterSale = (recipeId) => {
+    registerSale(recipeId);
+  };
+
+  const renderRecipeItem = ({ item }) => (
+    <View style={styles.itemContainer}>
+      <Text style={styles.itemText}>{`Nome: ${item.name} - Preço: ${item.price} - Itens: ${item.items.map(i => `${i.text} (x${i.quantity})`).join(', ')}`}</Text>
+      <Button title="Registrar Venda" onPress={() => handleRegisterSale(item.id)} />
     </View>
   );
-}
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Controle de Saída</Text>
+      <FlatList
+        data={recipes}
+        keyExtractor={recipe => recipe.id}
+        renderItem={renderRecipeItem}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    padding: 20,
+    backgroundColor: '#f5f5f5',
   },
   text: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  itemContainer: {
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  itemText: {
+    fontSize: 18,
   },
 });
 
