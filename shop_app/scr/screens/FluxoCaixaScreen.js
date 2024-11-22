@@ -11,14 +11,14 @@ const FluxoCaixaScreen = () => {
 
   const renderRecipeItem = ({ item }) => (
     <View style={styles.itemContainer}>
-      <Text style={styles.itemText}>{`Nome: ${item.name} - Preço: ${item.price} - Itens: ${item.items.map(i => `${i.text} (x${i.quantity})`).join(', ')}`}</Text>
+      <Text style={styles.itemText}>{`Nome: ${item.name} - Preço: R$ ${item.value.toFixed(2)}`}</Text>
       <Button title="Registrar Venda" onPress={() => handleRegisterSale(item.id)} />
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Controle de Saída</Text>
+      <Text style={styles.text}>Fluxo de Caixa</Text>
       <FlatList
         data={recipes}
         keyExtractor={recipe => recipe.id}
@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    textAlign: 'center',
   },
   itemContainer: {
     padding: 15,

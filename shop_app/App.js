@@ -13,7 +13,7 @@ function MyTabs() {
   return ( 
     <RecipeProvider> 
       <Tab.Navigator> 
-        <Tab.Screen name="Criação" component={DailyRecipesScreen} /> 
+        <Tab.Screen name="Gerenciamento" component={DailyRecipesScreen} /> 
         <Tab.Screen name="Estoque" component={EstoqueScreen} /> 
         <Tab.Screen name="Fluxo de Caixa" component={FluxoCaixaScreen} /> 
         <Tab.Screen name="Controle Geral" component={ControleGeralScreen} /> 

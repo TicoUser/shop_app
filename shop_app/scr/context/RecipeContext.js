@@ -60,13 +60,16 @@ export const RecipeProvider = ({ children }) => {
   };
 
   const addRecipe = (recipe) => {
-    setRecipes([...recipes, recipe]);
-    recipe.items.forEach(({ id, quantity }) => updateItemQuantity(id, -quantity));
-  };
+     setRecipes([...recipes, recipe]);
+     recipe.items.forEach(({ id, quantity }) => updateItemQuantity(id, -quantity)); 
+    };
 
   const registerSale = (recipeId) => {
     const recipe = recipes.find(r => r.id === recipeId);
     if (recipe) {
+       addProfit({ id: Date.now().toString(), name: `Lucro da Receita: ${recipe.name}`, amount: recipe.value });
+       addExpense({ id: Date.now().toString(), name: `Despesas da Receita: ${recipe.name}`, amount: recipe.expense }); 
+
       recipe.items.forEach(({ id, quantity }) => {
         // Corrigir a atualização da quantidade para todos os itens
         const itemIndex = items.findIndex(i => i.id === id);
@@ -87,7 +90,7 @@ export const RecipeProvider = ({ children }) => {
   };
 
   return (
-    <RecipeContext.Provider value={{ items, addItem, editItem, removeItem, updateItemQuantity, recipes, addRecipe, registerSale }}>
+    <RecipeContext.Provider value={{ items, addItem, editItem, removeItem, updateItemQuantity, recipes, addRecipe, registerSale, expenses, addExpense, profits, addProfit }}>
       {children}
     </RecipeContext.Provider>
   );

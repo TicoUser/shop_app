@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TextInput, Button, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, SectionList, StyleSheet, TouchableOpacity } from 'react-native';
 import { RecipeContext } from '../context/RecipeContext';
+import { LineChart } from 'react-native-chart-kit';
 
 const ControleGeralScreen = () => {
   const { expenses, addExpense, profits, addProfit } = useContext(RecipeContext);
@@ -10,6 +11,10 @@ const ControleGeralScreen = () => {
   const [profitAmount, setProfitAmount] = useState('');
   const [isExpenseSectionVisible, setIsExpenseSectionVisible] = useState(true);
   const [isProfitSectionVisible, setIsProfitSectionVisible] = useState(true);
+
+  const totalExpenses = expenses.reduce((total, item) => total + item.amount, 0).toFixed(2);
+  const totalProfits = profits.reduce((total, item) => total + item.amount, 0).toFixed(2);
+  const balance = (totalProfits - totalExpenses).toFixed(2);
 
   const handleAddExpense = () => {
     if (expenseName.trim() && expenseAmount.trim()) {
@@ -28,13 +33,13 @@ const ControleGeralScreen = () => {
   };
 
   const renderExpenseItem = ({ item }) => (
-    <View style={styles.itemContainer}>
+    <View style={[styles.itemContainer, styles.shadow]}>
       <Text style={styles.itemText}>{`${item.name} - R$ ${item.amount.toFixed(2)}`}</Text>
     </View>
   );
 
   const renderProfitItem = ({ item }) => (
-    <View style={styles.itemContainer}>
+    <View style={[styles.itemContainer, styles.shadow]}>
       <Text style={styles.itemText}>{`${item.name} - R$ ${item.amount.toFixed(2)}`}</Text>
     </View>
   );
@@ -43,10 +48,10 @@ const ControleGeralScreen = () => {
     <View style={styles.container}>
       <Text style={styles.text}>Controle Geral</Text>
       
-      <View style={styles.section}>
+      <View style={[styles.section, styles.shadow]}>
         <TouchableOpacity onPress={() => setIsExpenseSectionVisible(!isExpenseSectionVisible)}>
           <Text style={styles.sectionTitle}>
-            {isExpenseSectionVisible ? '▼' : '▶'} Controle de Gastos
+            {isExpenseSectionVisible ? '▼' : '▶'} Adicionar Despesas
           </Text>
         </TouchableOpacity>
         {isExpenseSectionVisible && (
@@ -55,29 +60,38 @@ const ControleGeralScreen = () => {
               style={styles.input}
               value={expenseName}
               onChangeText={setExpenseName}
-              placeholder="Nome do Gasto"
+              placeholder="Nome da Despesa"
             />
             <TextInput
               style={styles.input}
               value={expenseAmount}
               onChangeText={setExpenseAmount}
-              placeholder="Valor do Gasto"
+              placeholder="Valor da Despesa"
               keyboardType="numeric"
             />
-            <Button title="Adicionar Gasto" onPress={handleAddExpense} />
-            <FlatList
-              data={expenses}
-              keyExtractor={item => item.id}
-              renderItem={renderExpenseItem}
+            <Button title="Adicionar Despesa" onPress={handleAddExpense} />
+            <SectionList
+              sections={[
+                {
+                  title: 'Despesas',
+                  data: expenses,
+                  renderItem: renderExpenseItem,
+                  keyExtractor: item => item.id,
+                }
+              ]}
+              keyExtractor={(item, index) => item.id || index.toString()}
+              renderSectionHeader={({ section: { title } }) => (
+                <Text style={styles.sectionTitle}>{title}</Text>
+              )}
             />
           </>
         )}
       </View>
       
-      <View style={styles.section}>
+      <View style={[styles.section, styles.shadow]}>
         <TouchableOpacity onPress={() => setIsProfitSectionVisible(!isProfitSectionVisible)}>
           <Text style={styles.sectionTitle}>
-            {isProfitSectionVisible ? '▼' : '▶'} Controle de Lucros
+            {isProfitSectionVisible ? '▼' : '▶'} Adicionar Lucros
           </Text>
         </TouchableOpacity>
         {isProfitSectionVisible && (
@@ -96,13 +110,56 @@ const ControleGeralScreen = () => {
               keyboardType="numeric"
             />
             <Button title="Adicionar Lucro" onPress={handleAddProfit} />
-            <FlatList
-              data={profits}
-              keyExtractor={item => item.id}
-              renderItem={renderProfitItem}
+            <SectionList
+              sections={[
+                {
+                  title: 'Lucros',
+                  data: profits,
+                  renderItem: renderProfitItem,
+                  keyExtractor: item => item.id,
+                }
+              ]}
+              keyExtractor={(item, index) => item.id || index.toString()}
+              renderSectionHeader={({ section: { title } }) => (
+                <Text style={styles.sectionTitle}>{title}</Text>
+              )}
             />
           </>
         )}
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Resumo Financeiro</Text>
+        <Text style={styles.summaryText}>Total de Gastos: R$ {totalExpenses}</Text>
+        <Text style={styles.summaryText}>Total de Lucros: R$ {totalProfits}</Text>
+        <Text style={styles.summaryText}>Balanço: R$ {balance}</Text>
+        <LineChart
+          data={{
+            labels: ['Gastos', 'Lucros'],
+            datasets: [
+              {
+                data: [parseFloat(totalExpenses), parseFloat(totalProfits)],
+              },
+            ],
+          }}
+          width={300} // from react-native
+          height={220}
+          yAxisLabel="R$"
+          chartConfig={{
+            backgroundColor: '#e26a00',
+            backgroundGradientFrom: '#fb8c00',
+            backgroundGradientTo: '#ffa726',
+            decimalPlaces: 2, // optional, defaults to 2dp
+            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            style: {
+              borderRadius: 16,
+            },
+          }}
+          style={{
+            marginVertical: 8,
+            borderRadius: 16,
+          }}
+        />
       </View>
     </View>
   );
@@ -122,6 +179,10 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: 30,
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    marginBottom: 40,  // Aumentar marginBottom para melhor visualização
   },
   sectionTitle: {
     fontSize: 20,
@@ -144,6 +205,20 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 18,
+  },
+  summaryText: {
+    fontSize: 18,
+    marginBottom: 5,
+  },
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
 
