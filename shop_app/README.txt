@@ -26,4 +26,42 @@ Tenha controle dos itens no estoque;
 Registre a venda de cada receita pelo Fluxo de caixa; 
 Tenha controle monetário de sua empresa no Controle Geral, adicionando receitas e despesas.
 
-Bom uso da apliação.                  ~Thiago Caldeira
+Bom uso da apliação.                  
+
+------------------------------------------------------------------
+
+Hello, welcome to our store management application. Here you can list your recipes, as well as their expenses and profits, and also list the materials used in each recipe, to have a real expense/income basis, as well as control over the output of materials.
+
+Let's go to the tutorial on how to make this application work:
+
+-Step 1 > Management:
+
+- Visit the "Management" area and list in "Material Management" the items that will be used in your recipes, the quantity will be assigned to your stock for better control of it.
+
+- After listing the items, you can minimize the material manager, and then focus on "Recipe Management", creating your recipes here with the items listed in Material Management.
+
+- Step 2 > Stock:
+
+- In the "Stock" tab, we will have all the items listed as materials for the recipes, as well as their quantity. (The quantity of items listed in the recipe will be automatically discounted after the sale of one of them is registered)
+
+- Step 3 > Cash flow:
+
+- In this tab, we will have control over the output of materials, as well as the expenses/revenue obtained for each item sold. (The cash flow passes the information to both the stock and the General Control, thus working with the control of materials used in each item, as well as the expenses and profit of the same).
+
+Step 4 > General Control:
+
+- Here we will have the monetary control of the application. (Control of expenses, revenue, with manual addition and also of sales records).
+
+Step by step:
+
+List your items;
+
+Create your recipes;
+
+Keep track of the items in stock;
+
+Record the sale of each recipe through the Cash Flow;
+
+Keep track of your company's monetary control in the General Control, adding revenue and expenses.
+
+Happy using of the application. ~Thiago Caldeira
